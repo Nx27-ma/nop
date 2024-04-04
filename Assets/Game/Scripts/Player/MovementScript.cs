@@ -25,13 +25,59 @@ public class MovementScript : MonoBehaviour
     #region Function
     void Update()
     {
-        #region Horizontal Movement
+        HorizontalMovement();
+        Jump();
+        DashLogic();
+    }
+
+    #region Dashing logic
+    private void DashLogic()
+    {
+        var isDashKeyDown = Input.GetKeyDown(KeyCode.LeftShift);
+        switch (dashState)
+        {
+            case DashState.Ready:
+                if (isDashKeyDown)
+                {
+                    savedVelocity = RB.velocity;
+                    dashState = DashState.Dashing;
+                }
+                break;
+            case DashState.Dashing:
+                dashTimer += Time.deltaTime * maxDashSpeed;
+                if (dashTimer >= maxDash)
+                {
+                    dashTimer = maxDash;
+                    RB.velocity = savedVelocity;
+                    RB.AddForce(new Vector2(RB.velocity.x * maxDashSpeed, RB.velocity.x), ForceMode2D.Impulse);
+                    dashState = DashState.Cooldown;
+                }
+                break;
+            case DashState.Cooldown:
+                dashTimer -= Time.deltaTime;
+                if (dashTimer <= 0)
+                {
+                    dashTimer = 0;
+                    dashState = DashState.Ready;
+                }
+                break;
+        }
+    }
+    #endregion
+
+    #region Horizontal Movement
+    private void HorizontalMovement()
+    {
         Vector2 vel = RB.velocity;
         vel.x = Input.GetAxis("Horizontal") * speed;
         RB.velocity = vel;
-        #endregion
+       
+    }
+    #endregion
 
-        #region Jumping logic
+    #region Jumping logic
+    private void Jump()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && groundCheck.Contacts > 0 && _canJump )
         {
             RB.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -47,40 +93,9 @@ public class MovementScript : MonoBehaviour
                 _canJumpTwice = true;
             }
         }
-        #endregion
-
-        #region Dashing logic
-        switch (dashState)
-        {
-            case DashState.Ready:
-                var isDashKeyDown = Input.GetKeyDown(KeyCode.LeftShift);
-                if (isDashKeyDown)
-                {
-                    savedVelocity = RB.velocity;
-                    RB.AddForce(new Vector2(RB.velocity.x * maxDashSpeed, RB.velocity.y));
-                    dashState = DashState.Dashing;
-                }
-                break;
-            case DashState.Dashing:
-                dashTimer += Time.deltaTime * maxDashSpeed;
-                if (dashTimer >= maxDash)
-                {
-                    dashTimer = maxDash;
-                    RB.velocity = savedVelocity;
-                    dashState = DashState.Cooldown;
-                }
-                break;
-            case DashState.Cooldown:
-                dashTimer -= Time.deltaTime;
-                if (dashTimer <= 0)
-                {
-                    dashTimer = 0;
-                    dashState = DashState.Ready;
-                }
-                break;
-        }
-        #endregion
     }
+    #endregion
+
     #endregion
 }
 #endregion
