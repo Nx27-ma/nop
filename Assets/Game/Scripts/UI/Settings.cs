@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {
-    // Start is called before the first frame update
+    #region JsonData
+    string LookUpKey, MoveDownKey, MoveLeftKey, MoveRightKey, JumpKey;
+    #endregion
     void Start()
     {
-        
+        JsonUtility.FromJson
     }
 
     // Update is called once per frame
