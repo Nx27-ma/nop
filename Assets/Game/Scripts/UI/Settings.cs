@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
@@ -9,12 +12,15 @@ public class Settings : MonoBehaviour
     #endregion
     void Start()
     {
-        JsonUtility.FromJson
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (FilePathTrue)
+        {
+            Process.Start("explorer.exe");
+        }
     }
 }
