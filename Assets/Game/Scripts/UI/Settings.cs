@@ -18,9 +18,10 @@ public class Settings : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (FilePathTrue)
-        {
-            Process.Start("explorer.exe");
-        }
+     //if 
+
+     //       Process.Start("explorer.exe");
     }
+
+    
 }
